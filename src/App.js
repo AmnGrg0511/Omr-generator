@@ -7,16 +7,42 @@ function App() {
   const [time, setTime] = useState(0);
   const [remainingTime, setRemainingTime] = useState(0);
   const [questions, setQuestions] = useState([]);
-  console.log({ questions });
+  const [submitted, setSubmitted] = useState(false);
+  const [answers, setAnswers] = useState([]);
+  const [score, setScore] = useState(null);
+
+  const calculate = () => {
+    if (answers.some((e) => e === "")) return;
+    const net = {
+      correct: 0,
+      wrong: 0,
+    };
+    questions.forEach((q, i) => {
+      if (q) {
+        if (answers[i] === q) {
+          net.correct++;
+        } else {
+          net.wrong++;
+        }
+      }
+    });
+    setScore(net);
+  };
 
   return (
     <div className="App">
-      {remainingTime === 0 && (
+      {questions.length === 0 && (
         <>
           <input
             type="number"
             placeholder="Enter number of questions"
-            style={{ padding: 10, margin: 10, height: 20 }}
+            style={{
+              padding: 10,
+              margin: 10,
+              height: 20,
+              border: "none",
+              outline: "none",
+            }}
             onChange={({ target: { value } }) => {
               if (value) setNumber(parseInt(value));
             }}
@@ -24,7 +50,13 @@ function App() {
           <input
             type="time"
             placeholder="Time"
-            style={{ padding: 10, margin: 10, height: 20 }}
+            style={{
+              padding: 10,
+              margin: 10,
+              height: 20,
+              border: "none",
+              outline: "none",
+            }}
             onChange={({ target: { value } }) => {
               if (value) {
                 const [hours, minutes] = value
@@ -46,6 +78,7 @@ function App() {
             onClick={() => {
               if (number && time) {
                 setQuestions(new Array(number).fill(""));
+                setAnswers(new Array(number).fill(""));
                 setInterval(
                   () => setRemainingTime((prev) => (prev ? prev - 1 : time)),
                   1000
@@ -57,7 +90,38 @@ function App() {
           </button>
         </>
       )}
-      {remainingTime !== 0 && (
+      {submitted && score == null && (
+        <div style={{ padding: 20, fontSize: 20, fontFamily: "monospace" }}>
+          Mark correct answers
+        </div>
+      )}
+      {score !== null && (
+        <div
+          style={{
+            padding: 40,
+            fontFamily: "monospace",
+            display: "flex",
+            flexWrap: "wrap",
+            justifyContent: "center",
+          }}
+        >
+          {[
+            ["Total", score.correct * 4 - score.wrong, number * 4],
+            ["Correct", score.correct],
+            ["Incorrect", score.wrong],
+            ["Unattempted", number - score.correct - score.wrong],
+          ].map((e) => (
+            <div>
+              <span style={{ padding: "0 5px 0 20px" }}>{e[0]}</span>
+              <span style={{ padding: 2, fontSize: 20 }}>{e[1]}</span>
+              {e[2] !== undefined && (
+                <span style={{ padding: "0 10px 0 5px" }}>/{e[2]}</span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+      {questions.length !== 0 && !submitted && (
         <div
           style={{
             position: "sticky",
@@ -109,12 +173,15 @@ function App() {
             key={i}
             question={question}
             setQuestions={setQuestions}
+            answers={answers}
+            setAnswers={setAnswers}
+            submitted={submitted}
             i={i}
           />
         ))}
       </div>
 
-      {remainingTime !== 0 && (
+      {questions.length !== 0 && (
         <button
           style={{
             padding: 10,
@@ -123,18 +190,14 @@ function App() {
             display: "inline-block",
             width: 100,
           }}
-          className="btn"
+          className={`btn${
+            submitted && answers.some((e) => e === "") ? " disabled" : ""
+          }`}
           onClick={() => {
-            if (number && time) {
-              setQuestions(new Array(number).fill(""));
-              setInterval(
-                () => setRemainingTime((prev) => (prev ? prev - 1 : time)),
-                1000
-              );
-            }
+            submitted ? calculate() : setSubmitted(true);
           }}
         >
-          Submit
+          {submitted ? "Calculate" : "Submit"}
         </button>
       )}
     </div>
