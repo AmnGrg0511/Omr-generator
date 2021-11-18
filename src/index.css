@@ -11,3 +11,27 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+.btn {
+  margin: 5px;
+  padding: 6px 12px;
+  font-weight: bold;
+  border: none;
+  color: #444;
+  transition: all ease 0.1s;
+  cursor: pointer;
+  border-radius: 2px;
+}
+
+.btn:hover {
+  opacity: .8;
+} 
+
+.btn:active {
+  opacity: .5;
+}
+
+.active {
+  color: #fff;
+  background-color: rgb(40, 130, 190);
+}
