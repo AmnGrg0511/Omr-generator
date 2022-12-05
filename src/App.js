@@ -12,7 +12,6 @@ function App() {
   const [score, setScore] = useState(null);
 
   const calculate = () => {
-    if (answers.some((e) => e === "")) return;
     const net = {
       correct: 0,
       wrong: 0,
@@ -34,15 +33,7 @@ function App() {
       {questions.length === 0 && (
         <>
           <input
-            type="number"
             placeholder="Enter number of questions"
-            style={{
-              padding: 10,
-              margin: 10,
-              height: 20,
-              border: "none",
-              outline: "none",
-            }}
             onChange={({ target: { value } }) => {
               if (value) setNumber(parseInt(value));
             }}
@@ -50,13 +41,6 @@ function App() {
           <input
             type="time"
             placeholder="Time"
-            style={{
-              padding: 10,
-              margin: 10,
-              height: 20,
-              border: "none",
-              outline: "none",
-            }}
             onChange={({ target: { value } }) => {
               if (value) {
                 const [hours, minutes] = value
@@ -67,14 +51,7 @@ function App() {
             }}
           />
           <button
-            style={{
-              padding: 10,
-              margin: 10,
-              height: 44,
-              display: "inline-block",
-              width: 100,
-            }}
-            className="btn"
+            className="btn btn-large"
             onClick={() => {
               if (number && time) {
                 setQuestions(new Array(number).fill(""));
@@ -91,19 +68,13 @@ function App() {
         </>
       )}
       {submitted && score == null && (
-        <div style={{ padding: 20, fontSize: 20, fontFamily: "monospace" }}>
+        <div className="code">
           Mark correct answers
         </div>
       )}
       {score !== null && (
         <div
-          style={{
-            padding: 40,
-            fontFamily: "monospace",
-            display: "flex",
-            flexWrap: "wrap",
-            justifyContent: "center",
-          }}
+          className="code"
         >
           {[
             ["Total", score.correct * 4 - score.wrong, number * 4],
@@ -183,16 +154,7 @@ function App() {
 
       {questions.length !== 0 && (
         <button
-          style={{
-            padding: 10,
-            margin: 10,
-            height: 44,
-            display: "inline-block",
-            width: 100,
-          }}
-          className={`btn${
-            submitted && answers.some((e) => e === "") ? " disabled" : ""
-          }`}
+          className="btn btn-large"
           onClick={() => {
             submitted ? calculate() : setSubmitted(true);
           }}
