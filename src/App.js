@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./App.css";
 import { Options } from "./components/Options";
 
@@ -28,25 +28,30 @@ function App() {
     setScore(net);
   };
 
+  useEffect(() => {
+    if (remainingTime < 0) {
+      setSubmitted(true);
+    }
+  }, [remainingTime])
+
   return (
     <div className="App">
       {questions.length === 0 && (
         <>
           <input
-            placeholder="Enter number of questions"
+            type="number"
+            placeholder="Number of questions"
             onChange={({ target: { value } }) => {
               if (value) setNumber(parseInt(value));
             }}
           />
           <input
-            type="time"
-            placeholder="Time"
+            type="number"
+            placeholder="Time (minutes)"
             onChange={({ target: { value } }) => {
               if (value) {
-                const [hours, minutes] = value
-                  .split(":")
-                  .map((e) => parseInt(e));
-                setTime(60 * (60 * hours + minutes));
+                setTime(60 * value);
+                setRemainingTime(60 * value);
               }
             }}
           />
@@ -57,7 +62,7 @@ function App() {
                 setQuestions(new Array(number).fill(""));
                 setAnswers(new Array(number).fill(""));
                 setInterval(
-                  () => setRemainingTime((prev) => (prev ? prev - 1 : time)),
+                  () => setRemainingTime(prev => prev - 1),
                   1000
                 );
               }
@@ -86,7 +91,7 @@ function App() {
               <span style={{ padding: "0 5px 0 20px" }}>{e[0]}</span>
               <span style={{ padding: 2, fontSize: 20 }}>{e[1]}</span>
               {e[2] !== undefined && (
-                <span style={{ padding: "0 10px 0 5px" }}>/{e[2]}</span>
+                <span style={{ padding: "0 10px 0 5px" }}>/ {e[2]}</span>
               )}
             </div>
           ))}

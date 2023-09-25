@@ -6,15 +6,14 @@ export const Options = ({
   setAnswers,
   submitted,
 }) => {
-  console.log(answers);
   return (
     <div
       style={{
         display: "flex",
         margin: 10,
         boxShadow: `#${
-          answers[i] ? (answers[i] !== question ? "cf1b1b80" : "09c14999" ): "0000001d"
-        } 0px 0px 4px`,
+          answers[i] ? (answers[i] !== question ? "cf1b1bee" : "09c149ee" ): "0000001d"
+        } 0px 0px 10px`,
       }}
     >
       <div
